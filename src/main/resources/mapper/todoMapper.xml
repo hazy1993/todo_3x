@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.todo.todoList.Mapper.TodoMapper">
+
+
+    <insert id="createTodos" parameterType="com.todo.todoList.vo.Todos">
+
+        INSERT INTO TODOS (TITLE,CONTENT,EXEC_DT,INSERT_DT)
+        VALUES (
+               #{title}
+               ,#{content}
+               ,#{execDt}
+               ,NOW()
+               )
+    </insert>
+
+    <select id="getAllTodos" parameterType="com.todo.todoList.vo.Todos" resultType="com.todo.todoList.vo.Todos">
+        SELECT * FROM TODOS
+    </select>
+
+    <select id="getTodosById" parameterType="com.todo.todoList.vo.Todos" resultType="com.todo.todoList.vo.Todos">
+        SELECT * FROM TODOS
+        WHERE ID = #{id}
+    </select>
+
+
+    <update id="updateTodo" parameterType="com.todo.todoList.vo.Todos"
+            useGeneratedKeys="true" keyProperty="id">
+        UPDATE TODOS SET
+               title = #{title}
+              ,CONTENT = #{content}
+              ,EXEC_DT = #{execDt}
+              <if test="execYn != null and execYn != ''">
+                 ,EXEC_YN = #{execYn}
+              </if>
+              ,UPDATE_DT = NOW()
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteTodos" parameterType="com.todo.todoList.vo.Todos">
+        DELETE FROM TODOS
+        WHERE ID = #{id}
+    </delete>
+
+    <select id="searchTodos" parameterType="com.todo.todoList.vo.Todos" resultType="com.todo.todoList.vo.Todos">
+        SELECT * FROM TODOS
+        WHERE 1=1
+        <if test="title != null and title != ''">
+            AND TITLE LIKE CONCAT('%', #{title}, '%')
+        </if>
+        <if test="content != null and content != ''">
+            AND content LIKE CONCAT('%', #{content}, '%')
+        </if>
+    </select>
+
+</mapper>
